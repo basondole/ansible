@@ -1,0 +1,19 @@
+interfaces {
+{%for interface in interfaces %}
+    {{interface.interface}} {
+        unit {{ interface.vlan }} {
+            description "{{interface.description}}";
+{% if interface.vlan != 0 %}
+            vlan-id {{interface.vlan}};
+{% endif %}  
+            family inet {
+                address {{interface.ipv4}};
+            }
+            family inet6 {
+                address {{interface.ipv6}};
+            }
+        }
+    }
+{% endfor %}
+}
+

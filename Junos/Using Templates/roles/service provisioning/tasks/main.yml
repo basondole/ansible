@@ -1,0 +1,18 @@
+---
+
+- name: creating internet service configuration
+  template: src=main.internet.j2 dest=./builds/internet.{{protocol}}.conf
+  when: service == 'internet'
+
+# other customer related services
+# - name: creating service layer 2 transport
+#   when: service == 'l2mpls'
+
+# - name: configuring service layer 3 transport
+#   when: service == 'l3mpls'
+
+# - name: configuring service vpls bgp
+#   when: service == 'vpls_bgp'
+
+# - name: configuring service vpls ldp
+#   when: service == 'vpls_ldp'

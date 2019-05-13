@@ -1,0 +1,92 @@
+- name: configuring untagged interface for internet
+  junos_command:
+     commands:
+       - configure private
+       - edit interface {{interface}}.{{unit}}  # creating an interface
+       - set family inet address {{ipv4}}       # configuring ipv4 address
+       - set family inet6 address {{ipv6}}      # configuring ipv6 address
+         #when: {{ipv6}}
+       - set description "{{description}}"      # configuring interface description
+       - top
+       - show | compare                         # confirming the changes
+       - commit and-quit comment "configured internet for {{description}}"
+  when: unit == "0"
+
+- name: configuring tagged interface for internet
+  junos_command:
+     commands:
+       - configure private
+       - edit interface {{interface}}.{{unit}}  # creating an interface
+       - set vlan-id {{unit}}                   # tagggin the interface
+       - set family inet address {{ipv4}}       # configuring ipv4 address
+       - set family inet6 address {{ipv6}}      # configuring ipv6 address
+         #when: {{ipv6}}
+       - set description "{{description}}"      # configuring interface description
+       - top
+       - show | compare                         # confirming the changes
+       - commit and-quit comment "configured internet for {{description}}"
+  when: unit != "0"
+
+- name: configuring dynamic protocol bgp
+  junos_command:
+     commands:
+       - configure private
+       - edit protocol bgp
+       - set group CUSTOMERS export DEFAULT_ROUTE
+       - set group CUSTOMERS neighbor {{bgp_neighbor}} peer-as {{bgp_peer_as}}
+       - top
+       - edit policy-option policy-statement DEFAULT_ROUTE
+       - set term default from route-filter 0/0 exact
+       - set term default then accept
+       - set term deny then reject
+       - top
+       - show | compare
+       - commit and-quit comment "configured bgp for {{description}}"
+  when: protocol == 'bgp'
+
+- name: configuring dynamic protocol ospf
+  junos_command:
+     commands:
+       - configure private
+       - edit protocol ospf area {{ospf_area}}
+       - set export network-summary-export DEFAULT_ROUTE
+       - set interface {{interface}}.{{unit}}
+       - top
+       - edit policy-option policy-statement DEFAULT_ROUTE
+       - set term default from route-filter 0/0 exact
+       - set term default then accept
+       - set term deny then reject
+       - top
+       - show | compare
+       - commit and-quit comment "configured ospf for {{description}}"
+  when: protocol == 'ospf'
+
+- name: configuring dynamic protocol rip
+  junos_command:
+     commands:
+       - configure private
+       - edit protocol rip
+       - set group CUSTOMERS export DEFAULT_ROUTE
+       - set group CUSTOMERS neighbor {{interface}}.{{unit}}
+       - top
+       - edit policy-option policy-statement DEFAULT_ROUTE
+       - set term default from route-filter 0/0 exact
+       - set term default then accept
+       - set term deny then reject
+       - top
+       - show | compare
+       - commit and-quit comment "configured rip for {{description}}"
+  when: protocol == 'rip'
+
+
+- name: configuring route static
+  junos_command:
+     commands:
+       - configure private
+       - edit routing-options
+       - set static route {{prefix}} next-hop {{next_hop}}
+       - top
+       - show | compare
+       - commit and-quit comment "configured static route for {{description}}"
+  when: protocol == 'static'
+   

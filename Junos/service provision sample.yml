@@ -1,0 +1,49 @@
+---
+
+- hosts: 192.168.56.36 # put edge router ip here  without quote marks
+  gather_facts: no
+  connection: network_cli
+  vars: 
+     service: "" # internet or l3mpls or l2mpls
+     interface: "" # exampls ge-0/1/0
+     unit: ""   # unit number for logical interface (sub-interface)
+     ipv4: ""   # ipv4 address with mask example 1.1.1.1/30
+     ipv6: ""   # ipv6 address with mask example 2001::a/126
+     description: "" # description of the service
+     protocol: "" # bgp or ospf or rip or static
+     # assign by putting value between the quote marks example ipv4: "1.1.1.1/30"
+     # all variables above are mandatory except protocol
+
+  pre_tasks:
+    - name: set bgp properties
+      set_fact:
+        bgp_neighbor: "" # put neighbor address in quotes if bgp in use
+        bgp_peer_as: ""  # put neighbor as-number in quotes if bgp in use
+      when: protocol == "bgp"
+
+    - name: set ospf properties
+      set_fact: 
+        ospf_area: "" # put area-id in quotes if ospf in use
+      when: protocol == "ospf"
+
+    - name: set static route properties
+      set_fact: 
+        prefix: ""   # put route in quotes if static route in use in quotes
+        next_hop: "" # put next-hop address here in quotes
+      when: protocol == "static"
+
+    - name: set vrf properties
+      set_fact: 
+        vrf_name: ""   #put vrf name betwwen quotes for l3 mpls
+        rd: ""         # put route-distinguisher here in quotes
+      when: service == "l3mpls"
+
+    - name: set l2circuit properties
+      set_fact: 
+        neighbor: "" #put l2 neighbor ip-here in quotes
+        mtu: ""  # put MTU value here in quotes
+      when: service == "l2mpls"
+
+  roles:
+    - service provisioning
+#    - edge router deployment

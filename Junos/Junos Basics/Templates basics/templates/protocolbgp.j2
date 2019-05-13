@@ -1,0 +1,10 @@
+protocols {
+    bgp {
+        group {{bgp_group_name}} {
+            export {{policy_name}};
+            neighbor {{bgp_neighbor}} {
+                peer-as {{remote_as}};
+            }
+        }
+    }
+}

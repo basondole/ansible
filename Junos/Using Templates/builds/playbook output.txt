@@ -1,0 +1,11 @@
+basondole@debian:~/ansible/Using Templates$ sudo ansible-playbook service\ provision\ sample.yml 
+ [WARNING]: While constructing a mapping from /home/basondole/ansible/Ansible/Using Templates/roles/service provisioning/vars/main.yml, line 31,
+column 3, found a duplicate dict key (when). Using last defined value only.
+
+PLAY [192.168.56.36] *****************************************************************************************************************************
+
+TASK [service provisioning : creating internet service configuration] ****************************************************************************
+changed: [192.168.56.36]
+
+PLAY RECAP ***************************************************************************************************************************************
+192.168.56.36              : ok=1    changed=1    unreachable=0    failed=0   

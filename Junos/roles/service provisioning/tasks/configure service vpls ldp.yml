@@ -1,0 +1,33 @@
+- name: configuring interfaces for vpls
+  junos_command:
+     commands:
+       - configure private
+       - edit interface {{interface}}.{{unit}}
+       - set vlan-id {{unit}}
+         # when: {{tag}} == 'yes'
+       - set encapsulation vlan-vpls
+         # when: {{tag}} == 'yes'
+       - set family vpls
+       - set description {{description}}
+       - top
+       - show | compare
+       - commit and-quit comment "configured vpls interface for {{description}}"
+
+- name: configuring routing instance {{vrf_name}} for ldp vpls
+  junos_command:
+     commands:
+       - configure private
+       - edit routing-instances {{vrf_name}}
+       - set instance-type vpls
+       - set interface {{interface}}.{{unit}}
+       - set protocol vpls vpls-id {{unit}}
+       - set protocol vpls neighbor {{item}}
+       - top
+       - show | compare
+       - commit and-quit comment "configured routing-instance {{vrf_name}}"
+     with_items:
+          - neighbor_1
+          - neighbor_2
+
+
+
