@@ -1,5 +1,5 @@
-PLAYBOOK
-========
+PLAYBOOK RUNNING
+================
 
 Note: Tasks that are not related with the defined variables in the play are skipped
       [virttan] is the ansible_hostname for a router we are working on
@@ -75,6 +75,7 @@ basondole@debian:~/ansible/Ansible$
 
 DEVICE COMMIT
 =============
+Note the commits that have been done by the play
 
 fisi@edge> show system commit                 
 0   2019-05-10 22:35:02 UTC by fisi via cli
@@ -96,6 +97,8 @@ fisi@edge> show system commit
 8   2019-05-10 22:32:21 UTC by fisi via cli
     configured interface for backhaul configured by ansible
 
+
+Rolling back to see what was added by the play. Since there were 8 commits we'll rollback to 9
 
 fisi@edge> configure private 
 warning: uncommitted changes will be discarded on exit
