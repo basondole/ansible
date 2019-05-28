@@ -28,7 +28,7 @@
 
     - name: set static route properties
       set_fact: 
-        prefix: ""   # put route in quotes if static route in use in quotes
+        prefix: ""   # put route in quotes if static route in use
         next_hop: "" # put next-hop address here in quotes
       when: protocol == "static"
 
