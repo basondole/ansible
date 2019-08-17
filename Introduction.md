@@ -1,9 +1,10 @@
 # Readme
 
-Ansible is a radically simple IT automation platform that makes your applications and systems easier to deploy.
+Ansible is an open-source automation tool, or platform, used for IT tasks such as configuration management, application deployment, intraservice orchestration and provisioning.
+Learn more at www.ansible.com  
 Ansible uses playbooks to perform tasks. Essentially a play book consists of one or more tasks to be performed by modules
 There are different modules for different operations such as copying files, sending shell comands etc
-These tasks are performed against specified host(s) as specified in the play
+These tasks are performed against specified host(s) as specified in the play.
 Generaly however the hosts must be defined in the ansible hosts file
 A simple task can also be executed by using ad-hoc command, this means no play book is required and the command can be simply run on terminal specifying the module to use and the host(s)
 
