@@ -1,0 +1,38 @@
+---
+# this play book takes a back up of configuration of junos device
+# and saves the backup on the specified location
+# to avoid host key checking that may cause failed connection
+# in ansible config file set host_key_checking: False 
+
+ - name: Get backup of running config
+   hosts: 192.168.56.36
+   gather_facts: no
+   connection: local # netconf must be enabled on remote device
+
+   tasks:
+      - name: Collecting device facts
+        junos_facts:
+           gather_subset: default
+
+      - name: Backup junos configuration
+        junos_config:
+           backup: yes
+        register: config
+
+      - name: Dispaly temp backup location
+        debug: msg={{config.backup_path}}  #junos_config module does not return the output from the cli
+
+ - name: Organizing the backup files on local machine
+   hosts: server
+   gather_facts: no
+   connection: local
+
+   tasks:
+      - name: Moving the backup file to a specified location on this machine
+        copy: src={{hostvars['192.168.56.36'].config.backup_path}} dest=/home/baggy/config.backup/{{hostvars['192.168.56.36'].ansible_facts.net_hostname}}/
+
+      - name: Delete the temp backup directory {{hostvars['192.168.56.36'].config.backup_path}}
+        file:
+          path: ./backup
+          state: absent
+

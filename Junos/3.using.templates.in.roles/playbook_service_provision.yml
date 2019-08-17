@@ -1,0 +1,21 @@
+# In this play book user specifies 
+# 1. the edge router
+# 2. type of service to provision
+# 3. protocol associated with the service
+# Then user goes to ./roles/service.provisioning/vars/main.yml
+# Edit the main.yml file and add the associated parameters
+# Run the play: ansible-playbook playbook_service_provision.yml
+
+---
+
+- hosts: 192.168.56.36 # put edge router ip here  without quote marks
+  gather_facts: no
+  connection: network_cli
+  vars:
+     # For service options are: internet or l3mpls or l2mpls
+     service: internet
+     # For protocol options are: static ospf rip bgp
+     protocol: static
+
+  roles:
+    - service.provisioning

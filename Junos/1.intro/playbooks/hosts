@@ -1,0 +1,5 @@
+# This is a hosts file used by ansible play-books
+[routers]
+192.168.56.36 ansible_ssh_user=fisi ansible_ssh_pass=fisi123 ansible_network_os=junos
+[vm]
+server ansible_host=192.168.56.1

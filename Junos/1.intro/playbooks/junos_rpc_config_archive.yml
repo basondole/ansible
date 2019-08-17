@@ -1,0 +1,39 @@
+# This playbook uses RPC to get configuration data from the device
+# Use the local host file to run the playbook
+#    Run: ansible-playbook junos_conf_archival.yml -i ./hosts
+
+---
+- name: archive config
+  hosts: routers
+  roles:
+     - Juniper.junos
+  connection: local
+  gather_facts: no
+  ignore_errors: yes
+
+  vars_prompt:
+    - name: username
+      prompt: user name
+    - name: password
+      prompt: password
+      private: yes
+    - name: rpc_command
+      prompt: rpc command
+
+  tasks:
+     - name: run rpc command to get configuration data
+       junos_get_config:
+           user: "{{username}}"
+           passwd: "{{password}}"
+           host: 192.168.56.36
+           logfile: configcollection.log
+           dest: "{{inventory_hostname}}_{{rpc_command}}.config"
+           format: xml # format: txt
+
+     # this is an optional task to delete the retry files
+     # retry files are created when tasks fail
+     # altenative is to edit the ansible config file
+     - name: delete retry file created when above task fails
+       file:
+          path: "{{playbook_dir}}/*.retry"
+          state: absent

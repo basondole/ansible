@@ -1,0 +1,20 @@
+{# Junos}
+{% for vrf,config in vrfs.iteritems() %}
+routing-instances {
+   {{vrf}} {
+      intstance-type virtual-router;
+{% for interface in interface_list %}
+{% if interface.startswith('xe') %}
+      interface {{interface}}.{{config.id}};
+{% endif %}
+{% endfor %}
+   }
+}
+{% endfor %}
+
+{# Arista EOS}
+{% for vrf,config in vrfs.iteritems() %}
+vrf definition {{vrf}}
+   rd 65000:{{config.id}}
+ip routing vrf {{vrf}}
+{% endfor %}

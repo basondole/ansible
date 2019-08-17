@@ -1,0 +1,11 @@
+---
+
+- route: 10.1.1.1/24
+  next_hop: 10.10.1.1
+
+- route: 0.0.0.0/0
+  next_hop: discard
+
+#uncomment below to add more static routes
+#- route: "" #put route here example 192.168.10.0/24
+#  next_hop: "" #put nexthop here

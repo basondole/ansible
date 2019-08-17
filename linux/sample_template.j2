@@ -1,0 +1,17 @@
+{# comments are written like this #}
+
+{{ansible_host}} [ {{ansible_hostname}} is {{ansible_os_family}} base ]
+
+{# setting variables and printing them #}
+{% set variable = "hello baggy" %}
+{{ variable }}
+
+{# including other jinja files #}
+{#% include "nameoffile.j2" %#}
+
+{# nested for loop #}
+{% for items in variable -%}
+   {% for item in items -%}
+      {{item}}
+{% endfor %}
+{% endfor %}

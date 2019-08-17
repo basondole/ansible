@@ -1,0 +1,20 @@
+---
+   - hosts: linux
+
+     tasks:
+        - name: print last 10 log messages for debian
+          command: tail /var/log/syslog
+          register: debian_log
+          when: ansible_os_family == "Debian"
+
+        - name: print last 10 log messages for redhat
+          command: tail /var/log/messages
+          register: redhat_log
+          when: ansible_os_family == "RedHat"
+
+        - name: output
+          debug: var={{item}}
+          with_items:
+             - debian_log
+             - redhat_log
+

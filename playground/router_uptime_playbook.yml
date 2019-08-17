@@ -1,0 +1,14 @@
+---
+#ansible-playbook router_uptime_playbook.yml  -i hosts  -v 
+   - hosts: routers
+     gather_facts: no
+     ignore_errors: yes
+
+     tasks:
+         - name: check uptime juniper
+           raw: show system uptime | match boot
+           when: ansible_network_os == "junos"
+
+         - name: check uptime cisco
+           raw: show ver | i uptime
+           when: ansible_network_os == "ios"

@@ -1,0 +1,4 @@
+# Define the ospf parameters here
+---
+ ospf_area_id: 
+ interface: 

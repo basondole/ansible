@@ -1,0 +1,3 @@
+[routers]
+10.18.128.120 ansible_network_os=junos ansible_ssh_user=fisi ansible_ssh_pass=fisi1223
+10.18.128.41 ansible_network_os=ios ansible_ssh_user=fisi ansible_ssh_pass=fisi123

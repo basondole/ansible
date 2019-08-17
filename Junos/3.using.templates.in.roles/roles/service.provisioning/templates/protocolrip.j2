@@ -1,0 +1,12 @@
+protocols {
+    rip {
+        group {{protocols.rip.group_name}} {
+            export {{protocols.rip.export_policy_name}};
+{%for interface in interfaces %}
+            neighbor {{interface.interface}}.{{interface.vlan}};
+{%endfor%}
+        }
+    }
+ }
+
+ 

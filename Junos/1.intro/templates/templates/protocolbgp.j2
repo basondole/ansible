@@ -1,0 +1,12 @@
+protocols {
+    bgp {
+        {% for group in config -%}
+        group {{group.bgp_group_name}} {
+            export {{group.bgp_export_policy_name}};
+            neighbor {{group.bgp_neighbor}} {
+                peer-as {{group.bgp_remote_as}};
+            }
+        }
+        {% endfor %}
+    }
+}

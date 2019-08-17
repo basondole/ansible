@@ -1,0 +1,3 @@
+---
+ - name: create a file from template
+   template: src=sample_template.j2 dest=/home/basondole/ansible/linuxtemplateoutput

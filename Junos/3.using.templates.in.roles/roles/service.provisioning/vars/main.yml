@@ -1,0 +1,36 @@
+---
+#interface properties
+interfaces:
+  - interface: xe-0/0/0
+    description: Internet Customer
+    vlan: 100
+    ipv4: 10.10.10.1
+    ipv6:
+
+#static routes
+routes:
+  - route: 192.168.1.0/24
+    next_hop: 10.1.1.1
+
+  # uncomment below to add more static routes
+  # - route: "" #put route here example 192.168.10.0/24
+  #  next_hop: "" #put nexthop here
+when: protocol == "static"
+
+#dynamic protocols properties
+protocols:
+  bgp:
+    group_name: SAMPLE_GROUP
+    export_policy_name: SAMPLE_POL
+    neighbor: 10.10.10.2
+    remote_as: 64512
+  when: protocol == bgp
+
+  ospf:
+    area_id: 
+  when: protocol == ospf
+
+  rip:
+    group_name: 
+    export_policy_name: 
+  when: protocol == rip

@@ -1,0 +1,21 @@
+---
+
+- name: creating internet service configuration
+  template: src=internet.j2 dest=./output.samples/internet.{{protocol}}.conf
+  when: service == 'internet'
+
+- name: creating service layer 2 transport configuration
+  template: src=l2transport.j2 dest=./output.samples/l2transport.conf
+  when: service == 'l2mpls'
+
+- name: configuring service layer 3 transport
+  template: src=l3transport.j2 dest=./output.samples/l3transport.conf
+  when: service == 'l3mpls'
+
+- name: configuring service vpls bgp
+  template: src=vpls_bgp.j2 dest=./output.samples/vpls_bgp.conf
+  when: service == 'vpls_bgp'
+
+- name: configuring service vpls ldp
+  template: src=vpls_ldp.j2 dest=./output.samples/vpls_ldp.conf
+  when: service == 'vpls_ldp'

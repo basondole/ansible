@@ -1,0 +1,52 @@
+# This playbook sends the configuration parameters defined below to the router
+---
+
+- hosts: 192.168.56.36
+  gather_facts: no
+  connection: network_cli
+  vars:
+    #interface properties
+     interface: ""
+     unit: ""
+     ipv4: ""
+     ipv6: ""
+     description: ""
+    #dyanmic protocols variables
+     as_number: ""
+     router_id: ""
+     loopback_ip: ""
+     igp: ""  # ospf or isis
+     ibgp: "" # yes or no
+     static_default_route: "" # yes or no
+     mpls: "" # ldp or rsvp or sr
+    # management variables
+     hostname: ""
+     ntp_server: ""
+     ntp_key: ""
+     snmp_community: ""
+   # all the variable above are mandatory
+
+  pre_tasks:
+    - name: set bgp properties
+      set_fact:
+        bgp_group: ""     # name of the bgp group
+        bgp_neighbor: ""  # the neighbor should be the route reflector
+      when: ibgp == "yes"
+
+    - name: set ospf properties
+      set_fact:
+         ospf_area_id: ""  # can be left blank if ospf not in use
+      when: igp == "ospf"
+
+    - name: set isis properties
+      set_fact:
+          isis_net: ""      # can be left blank if isis not in use
+      when: igp == "isis"
+
+    - name: set static route properties
+      set_fact:
+        next_hop: ""
+      when: static_default_route == "yes"
+
+  roles:
+    - edge router deployment

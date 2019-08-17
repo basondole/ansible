@@ -1,0 +1,109 @@
+PLAYBOOK
+========
+
+#Note: Tasks that are not related to internet service activation are skipped
+#      [virttan] is the ansible_hostname for a router we are working on
+
+
+basondole@debian:~/ansible$ sudo !!
+sudo ansible-playbook service\ provision\ sample.yml 
+
+PLAY [virttan] ***********************************************************************************************************************************
+
+TASK [set bgp properties] ************************************************************************************************************************
+ok: [virttan]
+
+TASK [set ospf properties] ***********************************************************************************************************************
+skipping: [virttan]
+
+TASK [set static route properties] ***************************************************************************************************************
+skipping: [virttan]
+
+TASK [set vrf properties] ************************************************************************************************************************
+skipping: [virttan]
+
+TASK [set l2circuit properties] ******************************************************************************************************************
+skipping: [virttan]
+
+TASK [service provisioning : configuring untagged interface for internet] ************************************************************************
+skipping: [virttan]
+
+TASK [service provisioning : configuring tagged interface for internet] **************************************************************************
+ [WARNING]: arguments wait_for, match, rpcs are not supported when using transport=cli
+ok: [virttan]
+
+TASK [service provisioning : configuring dynamic protocol bgp] ***********************************************************************************
+ok: [virttan]
+
+TASK [service provisioning : configuring dynamic protocol ospf] **********************************************************************************
+skipping: [virttan]
+
+TASK [service provisioning : configuring dynamic protocol rip] ***********************************************************************************
+skipping: [virttan]
+
+TASK [service provisioning : configuring route static] *******************************************************************************************
+skipping: [virttan]
+
+TASK [service provisioning : configuring interfaces for l2circuit] *******************************************************************************
+skipping: [virttan]
+
+TASK [service provisioning : configuring protocol l2circuit] *************************************************************************************
+skipping: [virttan]
+
+TASK [service provisioning : configuring interfaces for l3mpls] **********************************************************************************
+skipping: [virttan]
+
+TASK [service provisioning : configuring routing instance] ***************************************************************************************
+skipping: [virttan]
+
+TASK [service provisioning : configuring interfaces for vpls] ************************************************************************************
+skipping: [virttan]
+
+TASK [service provisioning : configuring routing instance {{vrf_name}} for bgp vpls] *************************************************************
+skipping: [virttan]
+
+TASK [service provisioning : configuring interfaces for vpls] ************************************************************************************
+skipping: [virttan]
+
+TASK [service provisioning : configuring routing instance {{vrf_name}} for ldp vpls] *************************************************************
+skipping: [virttan]
+
+PLAY RECAP ***************************************************************************************************************************************
+virttan                    : ok=3    changed=0    unreachable=0    failed=0   
+
+basondole@debian:~/ansible$ 
+
+
+
+
+DEVICE COMMIT
+=============
+fisi@big> show system commit     
+0   2019-05-10 22:47:07 UTC by fisi via cli
+    configured internet for internet service configured by ansible
+
+
+fisi@big> configure private 
+warning: uncommitted changes will be discarded on exit
+Entering configuration mode
+
+[edit]
+fisi@big# rollback 1 
+load complete
+
+[edit]
+fisi@big# show | compare 
+[edit interfaces em3]
+-    unit 555 {
+-        description "internet service configured by ansible";
+-        vlan-id 555;
+-        family inet {
+-            address 1.1.1.1/30;
+-        }
+-        family inet6 {
+-            address 2001::e/126;
+-        }
+-    }
+
+[edit]
+fisi@big# 

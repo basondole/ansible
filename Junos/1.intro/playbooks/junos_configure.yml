@@ -1,0 +1,60 @@
+---
+# this yaml file shows different methods of configuring junos devices
+
+ - name: Configuring junos device
+   hosts: 192.168.56.36
+   gather_facts: no
+
+   tasks:
+      - name: configuring router interface via junos_config module
+        connection: local # can use "local" or "netconf" if netconf is enabled on remote device
+        junos_config:
+           lines: 
+              # each command must begin with set
+              - set interfaces em2.999 description "configured by ansible"
+              - set interfaces em2.999 vlan-id 999
+              - set interfaces em2.999 family inet address 10.10.20.1/30
+              - set interfaces em2.999 family inet policer input 2Mbps output 2Mbps
+           comment: configured by ansible junos_config
+        register: junos_config
+        # junos_config module does not return the output from the cli
+        
+      - name: rolling back config done by junos_config module
+        connection: local
+        junos_config:
+          rollback: 1
+          comment: rollback of the config by ansible junos_config
+        register: rollback
+        when: junos_config.changed == true
+
+
+      - name: configuring router interface via junos_command module
+        connection: network_cli
+        junos_command:
+            commands:
+               - configure private
+               - edit interface em2.999
+               - set description "configured by ansible"
+               - set vlan-id 999
+               - set family inet address 10.10.20.1/30
+               - set family inet policer input 2Mbps output 2Mbps
+               - top
+               - show | compare
+               - commit and-quit comment "configured by ansible junos_command"
+               - show configuration interfaces em2.999
+               - quit
+        register: junos_command
+        when: rollback.changed == true
+        # junos_command module is not idempotent thus will not trigger the changed flag
+
+        # the when statement above is a conditional. This means
+        # this task will only be done if the "configuring router interface via junos_config" task changes configuration
+        # this is to avoid rolling back configuration not done by that task
+        # since this "configuring router interface via junos_command" task will first rollback before proceeding
+        # hence the use of when conditional to check if the change flag is true from the former task
+
+
+      - name: print the results for the junos_command module
+        ignore_errors: yes
+        debug: msg={{junos_command.stdout_lines[9]}}
+        when: rollback.changed == true

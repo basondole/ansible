@@ -1,0 +1,1 @@
+router01 ansible_host=192.168.56.26 ansible_network_os=ios ansible_ssh_user=fisi ansible_ssh_pass=fisi123

@@ -1,0 +1,21 @@
+---
+
+- name: configuring service internet
+  include: configure service internet.yml
+  when: service == 'internet'
+
+- name: configuring service layer 2 transport
+  include: configure service layer 2 transport.yml
+  when: service == 'l2mpls'
+
+- name: configuring service layer 3 transport
+  include: configure service layer 3 transport.yml
+  when: service == 'l3mpls'
+
+- name: configuring service vpls bgp
+  include: configure service vpls bgp.yml
+  when: service == 'vpls_bgp'
+
+- name: configuring service vpls ldp
+  include: configure service vpls ldp.yml
+  when: service == 'vpls_ldp'

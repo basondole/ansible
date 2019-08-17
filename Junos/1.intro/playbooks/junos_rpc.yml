@@ -1,0 +1,33 @@
+# Junos Remote Call Procedure (RPC) with ansible
+# This playbook requires the juniper roles to be installed in ansible
+# User will be prompted to input the rpc command and the output from device is saved
+# To get xml command via cli on Junos device run
+#   show system alerts | display xml rpc
+
+---
+- name: Run RPC command
+  hosts: routers
+  roles:
+     - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  vars_prompt:
+    - name: username
+      prompt: user name
+    - name: password
+      prompt: password
+      private: yes
+    - name: rpc_command
+      prompt: rpc command
+
+  tasks:
+     - name: run rpc command
+       junos_rpc:
+           host = {{inventory_hostname}}
+           user = {{username}}
+           passwd = {{password}}
+           rpc = {{rpc_command}}
+           format = xml # text
+           dest = {{inventory_hostname}}_{{rpc_command}}.xml
+

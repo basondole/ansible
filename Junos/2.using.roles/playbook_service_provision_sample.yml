@@ -1,0 +1,23 @@
+---
+
+- hosts: virttan
+  gather_facts: no
+  connection: network_cli
+  vars:
+     service: internet
+     interface: em3
+     unit: 555
+     ipv4: 10.1.1.1/30
+     ipv6: 2001::e/126
+     description: "internet service configured by ansible"
+     protocol: bgp
+
+  pre_tasks:
+    - name: set bgp properties
+      set_fact:
+        bgp_neighbor: 1.1.1.2
+        bgp_peer_as: 64512
+      when: protocol == bgp
+
+  roles:
+    - service provisioning

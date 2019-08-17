@@ -1,0 +1,156 @@
+PLAYBOOK
+========
+
+Note: Tasks that are not related with the defined variables in the play are skipped
+      [virttan] is the ansible_hostname for a router we are working on
+
+basondole@debian:~/ansible/Ansible$ sudo ansible-playbook edge\ deployment\ sample.yml 
+
+PLAY [virttan] ***********************************************************************************************************************************
+
+TASK [set bgp properties] ************************************************************************************************************************
+ok: [virttan]
+
+TASK [set ospf properties] ***********************************************************************************************************************
+skipping: [virttan]
+
+TASK [set isis properties] ***********************************************************************************************************************
+ok: [virttan]
+
+TASK [set static route properties] ***************************************************************************************************************
+skipping: [virttan]
+
+TASK [edge router deployment : configuring untagged interface for uplink] ************************************************************************
+skipping: [virttan]
+
+TASK [edge router deployment : configuring tagged interface for uplink] **************************************************************************
+ [WARNING]: arguments wait_for, match, rpcs are not supported when using transport=cli
+ok: [virttan]
+
+TASK [edge router deployment : configuring routing options] **************************************************************************************
+ok: [virttan]
+
+TASK [edge router deployment : configuring protocol isis] ****************************************************************************************
+ok: [virttan]
+
+TASK [edge router deployment : configuring protocol ospf] ****************************************************************************************
+skipping: [virttan]
+
+TASK [edge router deployment : configuring protocol ibgp] ****************************************************************************************
+ok: [virttan]
+
+TASK [edge router deployment : configuring protocol mpls] ****************************************************************************************
+ok: [virttan]
+
+TASK [edge router deployment : configuring protocol ldp] *****************************************************************************************
+ok: [virttan]
+
+TASK [edge router deployment : configuring protocol rsvp] ****************************************************************************************
+skipping: [virttan]
+
+TASK [edge router deployment : configuring hostname] *********************************************************************************************
+ok: [virttan]
+
+TASK [edge router deployment : configuring ntp] **************************************************************************************************
+ok: [virttan]
+
+TASK [edge router deployment : configuring snmp] *************************************************************************************************
+ok: [virttan]
+
+TASK [edge router deployment : configuring ssh] **************************************************************************************************
+ok: [virttan]
+
+TASK [edge router deployment : configuring telnet] ***********************************************************************************************
+ok: [virttan]
+
+TASK [edge router deployment : configuring netconf] **********************************************************************************************
+ok: [virttan]
+
+PLAY RECAP ***************************************************************************************************************************************
+virttan                    : ok=14   changed=0    unreachable=0    failed=0   
+
+basondole@debian:~/ansible/Ansible$ 
+
+
+
+DEVICE COMMIT
+=============
+
+fisi@edge> show system commit                 
+0   2019-05-10 22:35:02 UTC by fisi via cli
+    configured snmp
+1   2019-05-10 22:34:59 UTC by fisi via cli
+    configured ntp
+2   2019-05-10 22:32:38 UTC by fisi via cli
+    configured hostname
+3   2019-05-10 22:32:35 UTC by fisi via cli
+    configured ldp
+4   2019-05-10 22:32:33 UTC by fisi via cli
+    configured mpls
+5   2019-05-10 22:32:29 UTC by fisi via cli
+    configured ibgp
+6   2019-05-10 22:32:27 UTC by fisi via cli
+    configured isis
+7   2019-05-10 22:32:24 UTC by fisi via cli
+    configured ASN and router-id
+8   2019-05-10 22:32:21 UTC by fisi via cli
+    configured interface for backhaul configured by ansible
+
+
+fisi@edge> configure private 
+warning: uncommitted changes will be discarded on exit
+Entering configuration mode
+[edit]
+fisi@edge# rollback 9 
+load complete
+
+[edit]
+fisi@edge# show | compare 
+[edit system]
+-  host-name edge;
+-  ntp {
+-      authentication-key 1 type md5 value "$9$pQUV0RhylK8xN"; ## SECRET-DATA
+-      server 8.8.8.8;
+-      source-address 1.1.1.1;
+-  }
+[edit interfaces em3]
+-    unit 555 {
+-        description "backhaul configured by ansible";
+-        vlan-id 555;
+-        family inet {
+-            address 155.12.0.1/30;
+-        }
+-        family inet6 {
+-            address 2001:2345::1/126;
+-        }
+-        family mpls;
+-    }
+[edit interfaces lo0 unit 0]
+-      family iso {
+-          address 49.0000.0000.0000.0001.00;
+-      }
+[edit]
+-  snmp {
+-      interface lo0.0;
+-      community baggy;
+-  }
+[edit routing-options]
+-  router-id 1.1.1.1;
+-  autonomous-system 111;
+[edit protocols mpls]
+-    interface em3.555;
+[edit protocols bgp]
+-   local-address 1.1.1.1;
+[edit protocols bgp]
+-    group iBGP {
+-        type internal;
+-    }
+[edit protocols]
+-   isis {
+-       interface em3.555;
+-       interface lo0.0;
+-   }
+[edit protocols ldp]
+-    interface em3.555;
+
+[edit]

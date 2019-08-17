@@ -1,0 +1,40 @@
+---
+   - hosts: 192.168.56.2
+
+     vars:
+        source: "./copyfile.yaml"
+        destination: "/home/basondole/"
+
+     tasks:
+        - name: copy file
+          copy: src={{source}} dest={{destination}}
+          register: copy_status
+
+        - name: print copy status
+          debug: var=copy_status
+
+        - name: get copy completion time
+          raw: date
+          register: date_time
+          notify: print copy completion time
+
+        - name: get system uptime
+          shell: uptime
+          register: sys_uptime
+
+        - name: testing while loop
+          shell: service ssh status
+          register: result
+          until: result.stdout.find("active (running)") != -1
+          retries: 5
+          delay: 1
+
+        - include: linuxtemplate.yml
+
+     handlers:
+        - name: print copy completion time
+          debug: var={{item}}
+          with_items:
+             - date_time
+             - sys_uptime
+          when: ansible_host == "192.168.56.6"

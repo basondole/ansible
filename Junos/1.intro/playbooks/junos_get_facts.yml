@@ -1,0 +1,45 @@
+---
+# this playbook shows different methods of fact gathering on junos devices
+
+  - name: Get facts from junos device
+    hosts: 192.168.56.36
+    gather_facts: no #ignore default fact gathering done by ansible
+    connection: local #can also use netconf if netconf is enabled on remote device
+    ignore_errors: yes
+
+    tasks:
+       - name: collecting default set of facts
+         junos_facts:
+            gather_subset: default
+         register: info
+
+       - name: displaying all the default facts
+         debug: msg={{info}}
+
+       - name: displaying select facts (hostname | model | version | serialnumber)
+         debug: msg={{item}}
+         with_items:
+            - "hostname: {{ansible_facts.net_hostname}}"
+            - "model: {{info.ansible_facts.ansible_net_model}}"
+            - "version: {{info.ansible_facts.ansible_net_version}}"
+            - "serialnumber: {{info.ansible_facts.ansible_net_serialnum}}"
+
+       - name: collecting default set of facts and interface facts
+         junos_facts:
+            gather_subset: interfaces
+         register: info
+
+       - name: displaying all the default and interface facts
+         debug: msg={{info}}
+
+       - name: displaying specific interface loopback0 facts
+         debug: msg={{ansible_facts.net_interfaces.lo0}}
+
+       - name: collecting default set of facts and configuration
+         junos_facts:
+            config_format: text #(Choices: xml, set, text, json)
+            gather_subset: config
+         register: info
+
+       - name: displaying the configuration for {{ansible_facts.net_hostname}}
+         debug: msg={{info.ansible_facts.ansible_net_config}}

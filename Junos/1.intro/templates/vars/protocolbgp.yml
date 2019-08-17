@@ -1,0 +1,12 @@
+# Thia is a variable file for bgp properties
+---
+- bgp_group_name: ANSIBLE
+  bgp_export_policy_name: POLICY_EXPORT
+  bgp_neighbor: 192.168.56.36
+  bgp_remote_as: 64512
+
+# Uncomment below for more groups
+ # bgp_group_name: ""
+ # bgp_export_policy_name: ""
+ # bgp_neighbor: ""
+ # bgp_remote_as: ""

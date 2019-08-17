@@ -1,0 +1,6 @@
+---
+
+- include: edge_router_baseconfig.yml
+- include: edge_router_management.yml
+- include: edge_router_security.yml
+

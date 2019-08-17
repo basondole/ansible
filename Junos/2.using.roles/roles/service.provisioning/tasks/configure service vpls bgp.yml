@@ -1,0 +1,30 @@
+- name: configuring interfaces for vpls
+  junos_command:
+     commands:
+       - configure private
+       - edit interface {{interface}}.{{unit}}
+       - set vlan-id {{unit}}
+         # when: {{tag}} == 'yes'
+       - set encapsulation vlan-vpls
+         # when: {{tag}} == 'yes'
+       - set family vpls
+       - set description {{description}}
+       - top
+       - show | compare
+       - commit and-quit comment "configured vpls interface for {{description}}"
+
+- name: configuring routing instance {{vrf_name}} for bgp vpls
+  junos_command:
+     commands:
+       - configure private
+       - edit routing-instances {{vrf_name}}
+       - set instance-type vpls
+       - set l2vpn-id l2vpn-id:{{rd}}
+       - route-distinguisher {{rd}}
+       - vrf-target target:{{rd}}
+       - set interface {{interface}}.{{unit}}
+       - set protocol vpls
+       - top
+       - show | compare
+       - commit and-quit comment "configured l2circuit for {{description}}"}
+

@@ -1,0 +1,6 @@
+# Define the bgp parameters here
+---
+ bgp_group_name: 
+ bgp_export_policy_name: 
+ bgp_neighbor: 
+ bgp_remote_as: 
