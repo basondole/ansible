@@ -1,2 +1,2 @@
-# ansible
-Automation of junos with ansible
+# Ansible with Junos
+

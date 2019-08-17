@@ -1,8 +1,0 @@
----
-
-- include: setup edge router base config.yml
-
-- include: setup edge router management.yml
-
-#- include: setup edge router security.yml
-
