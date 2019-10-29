@@ -85,7 +85,7 @@ Using /etc/ansible/ansible.cfg as config file
 PLAY [routers] ********************************************************************************
 
 TASK [check uptime juniper] *******************************************************************
-skipping: [192.168.56.63] => changed=false
+skipping: [192.168.56.26] => changed=false
   skip_reason: Conditional result was False
 changed: [192.168.56.36] => changed=true
   rc: 0
@@ -98,7 +98,7 @@ changed: [192.168.56.36] => changed=true
 TASK [check uptime cisco] *********************************************************************
 skipping: [192.168.56.36] => changed=false
   skip_reason: Conditional result was False
-changed: [192.168.56.63] => changed=true
+changed: [192.168.56.26] => changed=true
   rc: 0
   stderr: |-
     Shared connection to 41.188.128.41 closed.
@@ -108,7 +108,7 @@ changed: [192.168.56.63] => changed=true
 
 PLAY RECAP ************************************************************************************
 192.168.56.36             : ok=1    changed=1    unreachable=0    failed=0
-192.168.56.63              : ok=1    changed=1    unreachable=0    failed=0
+192.168.56.26              : ok=1    changed=1    unreachable=0    failed=0
 </pre>
 
 After a playbook completes you get a recap of the tasks done
