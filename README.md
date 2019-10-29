@@ -17,7 +17,7 @@ baggy@plasma:~/ansible$ cat hosts
 </pre>
 
 
-## ad-hoc commands
+## Ad-hoc commands
 In below examples we are issuing the `show system alarms` commnad to a junos device using two different modules
 thats is the `raw` module and the `junos_command` module  
 <pre>
@@ -45,7 +45,7 @@ baggy@plasma:~/ansible -m junos_command -a "commands='show syst alarm'" -c netwo
 }
 </pre>
 
-## Playbook
+## Playbooks
 
 In the example below a playbook runs and gets the uptime of junos and cisco ios device
 
@@ -76,7 +76,7 @@ baggy@plasma:~/ansible$ cat uptime.yml
 
 </pre>
 
-### Playing the book
+### Running the playbook
 
 <pre>
 baggy@plasma:~/ansible$ ansible-playbook router_uptime_playbook.yml  -i hosts  -v            
