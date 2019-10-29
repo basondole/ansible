@@ -113,6 +113,8 @@ PLAY RECAP *********************************************************************
 
 After a playbook completes you get a recap of the tasks done
 
+
+### Note
 To get more information about a module  
 `baggy@plasma:~/ansible$ ansible-doc <module name>`
 
